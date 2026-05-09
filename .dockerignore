@@ -1,0 +1,41 @@
+# Archivos a ignorar en la construcción de Docker
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node
+node_modules/
+npm-debug.log
+npm-debug.log.*
+yarn-error.log
+package-lock.json
+
+# Configuración
+#.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentación
+*.md
+README.md
+LICENSE
+
+# Archivos temporal
+tmp/
+temp/
+*.log
+.cache/
+
+# Control visual
+.history/
+.editorconfig

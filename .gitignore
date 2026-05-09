@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.local
+.env.docker
+.env.*.local
+.DS_Store
+*.log
+dist/
+build/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cache/
+philips-hue-arm64.tar
+philips-hue.tar

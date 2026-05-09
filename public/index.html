@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philips Hue Controller</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>💡 Philips Hue Controller</h1>
+                <p>Control remoto local para tu Philips Hue</p>
+            </div>
+            <div class="status" id="status">
+                <span class="status-dot"></span>
+                <span id="statusText">Conectando...</span>
+            </div>
+        </header>
+
+        <!-- Tabs Navigation -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="lights">Luces</button>
+            <button class="tab-btn" data-tab="groups">Grupos</button>
+            <button class="tab-btn" data-tab="presets">Presets</button>
+            <button class="tab-btn" data-tab="scenes">Modos</button>
+            <button class="tab-btn" data-tab="schedules">Automatizaciones</button>
+        </nav>
+
+        <!-- Lights Tab -->
+        <section id="lights" class="tab-content active">
+            <div id="lightsContainer" class="lights-grid">
+                <div class="loading">Cargando luces...</div>
+            </div>
+        </section>
+
+        <!-- Groups Tab -->
+        <section id="groups" class="tab-content">
+            <div id="groupsContainer" class="groups-grid">
+                <div class="loading">Cargando grupos...</div>
+            </div>
+        </section>
+
+        <!-- Presets Tab -->
+        <section id="presets" class="tab-content">
+            <div class="presets-grid">
+                <button class="preset-btn" onclick="setPreset('bright')">☀️ Brillante</button>
+                <button class="preset-btn" onclick="setPreset('warm')">🔆 Cálido</button>
+                <button class="preset-btn" onclick="setPreset('cool')">❄️ Frío</button>
+                <button class="preset-btn" onclick="setPreset('movie')">🎬 Película</button>
+                <button class="preset-btn" onclick="setPreset('reading')">📖 Lectura</button>
+                <button class="preset-btn" onclick="setPreset('night')">🌙 Noche</button>
+                <button class="preset-btn danger" onclick="setPreset('off')">⚫ Apagar Todo</button>
+            </div>
+        </section>
+
+        <!-- Scenes Tab (Modos de Programación) -->
+        <section id="scenes" class="tab-content">
+            <div class="scenes-section">
+                <div class="section-header">
+                    <h3>Modos Guardados</h3>
+                    <button class="btn btn-primary" onclick="saveCurrentAsScene()">+ Guardar Modo Actual</button>
+                </div>
+                <div id="scenesContainer" class="scenes-list">
+                    <div class="loading">Cargando modos...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedules Tab (Automatizaciones) -->
+        <section id="schedules" class="tab-content">
+            <div class="schedules-section">
+                <div class="section-header">
+                    <h3>Automatizaciones</h3>
+                    <button class="btn btn-primary" onclick="openScheduleModal()">+ Nueva Automatización</button>
+                </div>
+                <div id="schedulesContainer" class="schedules-list">
+                    <div class="loading">Cargando automatizaciones...</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Light Control Modal -->
+    <div id="lightModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLightModal()">&times;</span>
+            <h2 id="modalTitle">Controlar Luz</h2>
+            
+            <!-- Color Preview -->
+            <div class="color-preview-large" id="colorPreviewLarge"></div>
+
+            <!-- Quick Color Palette -->
+            <div class="control-group">
+                <label>Colores Predefinidos</label>
+                <div class="color-palette">
+                    <button class="color-btn" style="background: #FF0000" onclick="setQuickColor(0, 254)" title="Rojo">🔴</button>
+                    <button class="color-btn" style="background: #FF7F00" onclick="setQuickColor(7000, 254)" title="Naranja">🟠</button>
+                    <button class="color-btn" style="background: #FFFF00" onclick="setQuickColor(12000, 254)" title="Amarillo">🟡</button>
+                    <button class="color-btn" style="background: #00FF00" onclick="setQuickColor(21845, 254)" title="Verde">🟢</button>
+                    <button class="color-btn" style="background: #0000FF" onclick="setQuickColor(43690, 254)" title="Azul">🔵</button>
+                    <button class="color-btn" style="background: #9400D3" onclick="setQuickColor(52300, 254)" title="Púrpura">🟣</button>
+                    <button class="color-btn" style="background: #FFC0CB" onclick="setQuickColor(3000, 200)" title="Rosado">🩷</button>
+                    <button class="color-btn" style="background: #FFFFFF" onclick="setQuickColor(0, 0)" title="Blanco">⚪</button>
+                </div>
+            </div>
+
+            <!-- Brightness Control -->
+            <div class="control-group">
+                <label for="brightnessSlider">Brillo</label>
+                <div class="slider-container">
+                    <input type="range" id="brightnessSlider" min="0" max="254" value="127" class="slider">
+                    <span id="brightnessValue" class="slider-value">127</span>%
+                </div>
+            </div>
+
+            <!-- Hue Control -->
+            <div class="control-group">
+                <label for="hueSlider">Color (Hue)</label>
+                <div class="slider-container">
+                    <input type="range" id="hueSlider" min="0" max="65535" value="0" class="slider">
+                    <span id="hueValue" class="slider-value">0</span>
+                </div>
+            </div>
+
+            <!-- Saturation Control -->
+            <div class="control-group">
+                <label for="saturationSlider">Saturación</label>
+                <div class="slider-container">
+                    <input type="range" id="saturationSlider" min="0" max="254" value="254" class="slider">
+                    <span id="saturationValue" class="slider-value">254</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="applyLightChanges()">✓ Aplicar</button>
+                <button class="btn btn-secondary" onclick="closeLightModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Scene Modal -->
+    <div id="sceneModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSceneModal()">&times;</span>
+            <h2>Guardar Modo</h2>
+            
+            <div class="control-group">
+                <label for="sceneName">Nombre del Modo</label>
+                <input type="text" id="sceneName" placeholder="Ej: Cena romántica" class="input-field">
+            </div>
+
+            <div class="control-group">
+                <label>Luces a incluir</label>
+                <div id="sceneCheckboxes" class="checkbox-group">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="createScene()">✓ Guardar Modo</button>
+                <button class="btn btn-secondary" onclick="closeSceneModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeScheduleModal()">&times;</span>
+            <h2>Nueva Automatización</h2>
+            
+            <div class="control-group">
+                <label for="scheduleName">Nombre</label>
+                <input type="text" id="scheduleName" placeholder="Ej: Encender luz mañana" class="input-field">
+            </div>
+
+            <div class="control-group">
+                <label for="scheduleDescription">Descripción (opcional)</label>
+                <input type="text" id="scheduleDescription" placeholder="Descripción" class="input-field">
+            </div>
+
+            <div class="control-group">
+                <label for="scheduleTime">Hora (formato 24h)</label>
+                <input type="time" id="scheduleTime" class="input-field">
+            </div>
+
+            <div class="control-group">
+                <label for="scheduleAction">Acción</label>
+                <select id="scheduleAction" class="input-field">
+                    <option value="">Selecciona una acción...</option>
+                    <option value="on">Encender</option>
+                    <option value="off">Apagar</option>
+                    <option value="scene">Activar Modo</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="scheduleTarget">Objetivo (luz/grupo)</label>
+                <select id="scheduleTarget" class="input-field">
+                    <option value="">Cargando...</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="createSchedule()">✓ Crear Automatización</button>
+                <button class="btn btn-secondary" onclick="closeScheduleModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

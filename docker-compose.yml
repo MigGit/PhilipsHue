@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  hue-controller:
+    build: .
+    image: philips-hue-controller:latest
+    container_name: hue-controller
+    ports:
+      - "3000:3000"
+    environment:
+      # Configuración del bridge Hue
+      HUE_BRIDGE_IP: ${HUE_BRIDGE_IP:-192.168.1.100}
+      HUE_USERNAME: ${HUE_USERNAME:-newdeveloper}
+      NODE_ENV: production
+      PORT: 3000
+    restart: unless-stopped
+    networks:
+      - hue-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Descomenta si quieres usar variables desde archivo .env
+    # env_file:
+    #   - .env
+
+networks:
+  hue-network:
+    driver: bridge

@@ -1,0 +1,30 @@
+{
+  "name": "philips-hue-controller",
+  "version": "1.0.0",
+  "description": "Web app para controlar Philips Hue de primera generación",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "get-key": "node get-key.js"
+  },
+  "keywords": [
+    "philips",
+    "hue",
+    "lights",
+    "smart-home"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}
