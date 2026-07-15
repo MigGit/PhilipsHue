@@ -1,4 +1,13 @@
 # Archivos a ignorar en la construcción de Docker
+#
+# IMPORTANTE: este archivo debe vivir en la RAÍZ del proyecto (no dentro de
+# Docker/). Docker busca .dockerignore en la raíz del build context, y el
+# contexto tiene que ser la raíz del proyecto (ahí están server.js, public/,
+# package.json), no la carpeta Docker/ — los Dockerfiles se invocan con
+# `-f Docker/Dockerfile` pero el contexto sigue siendo `.` (raíz).
+
+# Herramientas Docker (Dockerfiles, compose, helpers, tar exportado)
+Docker/
 
 # Git
 .git
@@ -10,7 +19,8 @@ node_modules/
 npm-debug.log
 npm-debug.log.*
 yarn-error.log
-package-lock.json
+# package-lock.json NO se ignora: Dockerfile.prod usa `npm ci`, que lo
+# necesita (falla con "can only install with an existing package-lock.json").
 
 # Configuración
 #.env

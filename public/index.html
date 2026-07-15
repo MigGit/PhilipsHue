@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Philips Hue Controller</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -26,61 +27,11 @@
             <button class="tab-btn" data-tab="groups">Grupos</button>
             <button class="tab-btn" data-tab="presets">Presets</button>
             <button class="tab-btn" data-tab="scenes">Modos</button>
-            <button class="tab-btn" data-tab="schedules">Automatizaciones</button>
+            <button class="tab-btn" data-tab="schedules">Auto</button>
+            <button class="tab-btn" data-tab="settings">⚙️</button>
         </nav>
 
-        <!-- Lights Tab -->
-        <section id="lights" class="tab-content active">
-            <div id="lightsContainer" class="lights-grid">
-                <div class="loading">Cargando luces...</div>
-            </div>
-        </section>
-
-        <!-- Groups Tab -->
-        <section id="groups" class="tab-content">
-            <div id="groupsContainer" class="groups-grid">
-                <div class="loading">Cargando grupos...</div>
-            </div>
-        </section>
-
-        <!-- Presets Tab -->
-        <section id="presets" class="tab-content">
-            <div class="presets-grid">
-                <button class="preset-btn" onclick="setPreset('bright')">☀️ Brillante</button>
-                <button class="preset-btn" onclick="setPreset('warm')">🔆 Cálido</button>
-                <button class="preset-btn" onclick="setPreset('cool')">❄️ Frío</button>
-                <button class="preset-btn" onclick="setPreset('movie')">🎬 Película</button>
-                <button class="preset-btn" onclick="setPreset('reading')">📖 Lectura</button>
-                <button class="preset-btn" onclick="setPreset('night')">🌙 Noche</button>
-                <button class="preset-btn danger" onclick="setPreset('off')">⚫ Apagar Todo</button>
-            </div>
-        </section>
-
-        <!-- Scenes Tab (Modos de Programación) -->
-        <section id="scenes" class="tab-content">
-            <div class="scenes-section">
-                <div class="section-header">
-                    <h3>Modos Guardados</h3>
-                    <button class="btn btn-primary" onclick="saveCurrentAsScene()">+ Guardar Modo Actual</button>
-                </div>
-                <div id="scenesContainer" class="scenes-list">
-                    <div class="loading">Cargando modos...</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Schedules Tab (Automatizaciones) -->
-        <section id="schedules" class="tab-content">
-            <div class="schedules-section">
-                <div class="section-header">
-                    <h3>Automatizaciones</h3>
-                    <button class="btn btn-primary" onclick="openScheduleModal()">+ Nueva Automatización</button>
-                </div>
-                <div id="schedulesContainer" class="schedules-list">
-                    <div class="loading">Cargando automatizaciones...</div>
-                </div>
-            </div>
-        </section>
+        <div id="tabContent"></div>
     </div>
 
     <!-- Light Control Modal -->
@@ -211,6 +162,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

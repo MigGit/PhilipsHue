@@ -1,0 +1,49 @@
+<!-- Settings Tab (Configuración) -->
+<section id="settings" class="tab-content">
+    <div class="settings-section">
+        <h2>⚙️ Configuración del Bridge</h2>
+        <div class="config-panel">
+            <h3>Estado de Conexión</h3>
+            <div id="configStatus" class="status-box">
+                <div class="loading">Verificando configuración...</div>
+            </div>
+        </div>
+        <div class="config-panel">
+            <h3>Buscar Bridge Automáticamente</h3>
+            <p class="help-text">Busca bridges Hue disponibles en tu red</p>
+            <button class="btn btn-primary" onclick="discoverBridge()">🔍 Buscar Bridge</button>
+            <div id="discoveryResults" style="display: none; margin-top: 15px;"></div>
+        </div>
+        <div class="config-panel">
+            <h3>Configurar Manualmente</h3>
+            <p class="help-text">Si conoces la IP del bridge, puedes configurarla directamente</p>
+            <div class="config-form">
+                <div class="form-group">
+                    <label for="bridgeIpInput">IP del Bridge:</label>
+                    <input type="text" id="bridgeIpInput" placeholder="ej: 192.168.1.100" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="usernameInput">Username (opcional):</label>
+                    <input type="text" id="usernameInput" placeholder="newdeveloper" class="form-input">
+                    <small class="help-text">Si no lo cambias, se mantendrá el actual</small>
+                </div>
+                <button class="btn btn-primary" onclick="updateBridgeConfig()">💾 Guardar Configuración</button>
+                <div id="configMessage" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        <div class="config-panel info-panel">
+            <h3>ℹ️ Información Útil</h3>
+            <ul>
+                <li><strong>¿Cómo encontrar la IP del bridge?</strong>
+                    <ul>
+                        <li>Abre tu router y busca "Philips Hue Bridge"</li>
+                        <li>O abre la app Philips Hue y ve a Configuración</li>
+                        <li>La IP se muestra en formato 192.168.x.x</li>
+                    </ul>
+                </li>
+                <li><strong>¿Por qué cambiar la IP?</strong> El router puede asignar una IP diferente al bridge en algunas ocasiones</li>
+                <li><strong>Descubrimiento automático:</strong> Funciona si tu red tiene acceso a internet</li>
+            </ul>
+        </div>
+    </div>
+</section>

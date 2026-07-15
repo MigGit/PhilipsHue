@@ -13,5 +13,5 @@ build/
 *.swo
 *~
 .cache/
-philips-hue-arm64.tar
-philips-hue.tar
+./Docker/philips-hue-arm64.tar
+./Docker/philips-hue.tar

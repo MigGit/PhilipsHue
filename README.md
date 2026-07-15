@@ -75,30 +75,35 @@ PORT=3000
 
 ### Creacion de Contenedor
 
+Todo lo relacionado con Docker vive en la carpeta `Docker/` (Dockerfile,
+docker-compose.yml, scripts helper). El contexto de build sigue siendo la
+raíz del proyecto — se indica el Dockerfile con `-f`:
+
 Crear la imagen 
 ```bash
 # Compatible con X86
-docker build -t philips-hue-controller:latest .
+docker build -f Docker/Dockerfile -t philips-hue-controller:1.0.0 .
 # Compatible con ARM
-docker buildx build --platform linux/arm64 -t philips-hue:latest --load .
+docker buildx build --platform linux/arm64 -f Docker/Dockerfile -t philips-hue:1.0.0 --load .
 ```
 
 Crear entregable
 ```bash
 # Compatible con X86
-docker create --name philips-hue philips-hue
+docker create --name philips-hue philips-hue:1.0.0
 # Compatible con ARM
-docker create --platform linux/arm64 --name philips-hue philips-hue
+docker create --platform linux/arm64 --name philips-hue philips-hue:1.0.0
 ```
 
 Extrae la imagen a tar
 ```bash
-docker save -o philips-hue-arm64.tar philips-hue:latest
+docker save -o ./Docker/philips-hue-arm64.tar philips-hue:1.0.0
 ```
 
 Elimina entregable
 ```bash
 docker rm philips-hue
+docker rmi philips-hue
 ```
 
 ## Uso
@@ -146,6 +151,27 @@ Opciones predefinidas:
 - 🎬 **Película**: Iluminación ambiental baja
 - 📖 **Lectura**: Luz blanca perfecta para leer
 - 🌙 **Noche**: Luz tenue roja para la noche
+
+## ⚙️ Configuración Dinámica del Bridge
+
+La aplicación ahora incluye una pantalla de configuración completa para detectar y actualizar la IP del bridge automáticamente.
+
+### 🔍 Búsqueda Automática
+- Escanea tu red para encontrar todos los bridges Hue disponibles
+- Muestra la IP de cada bridge detectado
+- Guarda la configuración de forma persistente
+
+### 🔧 Configuración Manual
+- Ingresa manualmente la IP si conoces el bridge
+- Valida la conexión antes de guardar
+- Permite actualizar el username
+
+### 📝 Almacenamiento Persistente
+- La configuración se guarda en `config.json`
+- Se carga automáticamente al reiniciar
+- Compatible con variables de entorno
+
+**Para más detalles:** Ver [BRIDGE_CONFIGURATION.md](Docs/BRIDGE_CONFIGURATION.md)
 
 ## API Endpoints
 
@@ -199,11 +225,23 @@ PUT  /api/groups/:id/action   - Cambiar estado del grupo
 ├── .env                   # Configuración (crear desde .env.example)
 ├── .env.example           # Ejemplo de configuración
 ├── get-key.js             # Script para obtener API key
-└── public/
-    ├── index.html         # Interfaz web
-    ├── styles.css         # Estilos
-    └── app.js             # Lógica del frontend
+├── public/
+│   ├── index.html         # Interfaz web
+│   ├── styles.css         # Estilos
+│   ├── api.js              # Comunicación común con el backend
+│   ├── utils.js             # Utilidades compartidas
+│   ├── app.js                # Shell: navegación entre tabs y arranque
+│   ├── partials/               # HTML de cada tab
+│   └── modules/                 # Lógica de cada tab (un módulo por feature)
+├── .dockerignore          # Debe estar en la raíz (contexto de build), no en Docker/
+└── Docker/                # Todo lo relacionado con Docker
+    ├── Dockerfile
+    ├── Dockerfile.prod
+    ├── docker-compose.yml
+    └── docker-helper.ps1 / docker-helper.sh
 ```
+
+Documentación completa: [Docs/MANUAL_COMPLETO.md](Docs/MANUAL_COMPLETO.md)
 
 ## Notas
 
